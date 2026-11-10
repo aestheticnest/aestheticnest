@@ -22,7 +22,6 @@ def create_app(test_config=None):
     root = Path(__file__).resolve().parent.parent
     load_dotenv(root / ".env")
     
-    # Vercel serverless environment ke liye instance path ko /tmp par set karna:
     instance_path = "/tmp/instance" if os.environ.get("VERCEL") else None
 
     app = Flask(__name__, instance_path=instance_path, instance_relative_config=True)
