@@ -21,17 +21,22 @@ limiter = Limiter(key_func=get_remote_address, default_limits=[])
 def create_app(test_config=None):
     root = Path(__file__).resolve().parent.parent
     load_dotenv(root / ".env")
-    app = Flask(__name__, instance_relative_config=True)
+    
+    # Vercel serverless environment ke liye instance path ko /tmp par set karna:
+    instance_path = "/tmp/instance" if os.environ.get("VERCEL") else None
+
+    app = Flask(__name__, instance_path=instance_path, instance_relative_config=True)
     app.config.from_object("app.config.Config")
+    
     if test_config:
         app.config.update(test_config)
+        
     if not app.config.get("SECRET_KEY"):
         if app.config.get("TESTING"):
             app.config["SECRET_KEY"] = "test-only-secret"
         else:
             raise RuntimeError("Set SECRET_KEY in .env before starting Aesthetic Nest.")
     
-    # Vercel ke read-only filesystem error se bachne ke liye try-except:
     try:
         os.makedirs(app.instance_path, exist_ok=True)
     except OSError:
