@@ -30,7 +30,13 @@ def create_app(test_config=None):
             app.config["SECRET_KEY"] = "test-only-secret"
         else:
             raise RuntimeError("Set SECRET_KEY in .env before starting Aesthetic Nest.")
-    os.makedirs(app.instance_path, exist_ok=True)
+    
+    # Vercel ke read-only filesystem error se bachne ke liye try-except:
+    try:
+        os.makedirs(app.instance_path, exist_ok=True)
+    except OSError:
+        pass
+
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
