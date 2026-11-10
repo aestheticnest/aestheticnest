@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ef">
+  <title>{% block title %}Aesthetic Nest — a softer kind of home{% endblock %}</title>
+  <meta name="description" content="Thoughtful home accents, warm lighting and little details for a more considered home.">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/store.css') }}">
+  <script src="{{ url_for('static', filename='js/store.js') }}" defer></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="announcement">Considered pieces for a home that feels like you <span aria-hidden="true">✳</span></div>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('main.home') }}"><span class="brand-mark" aria-hidden="true">an</span><span>Aesthetic <b>Nest</b><small>LIVE BEAUTIFULLY</small></span></a>
+    <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" data-menu-toggle>☰</button>
+    <nav class="main-nav" data-menu>
+      <a href="{{ url_for('main.shop') }}">Shop</a><a href="{{ url_for('main.curated_finds') }}">Curated finds</a><a href="{{ url_for('main.home') }}#story">Our point of view</a>
+    </nav>
+    <a class="bag-link" href="{{ url_for('checkout.cart') }}" aria-label="Shopping bag">Bag <span>{{ session.get('cart', {})|length }}</span></a>
+  </header>
+  {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-wrap" role="status">{% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer class="site-footer"><div class="footer-main"><a class="brand brand-light" href="{{ url_for('main.home') }}"><span class="brand-mark" aria-hidden="true">an</span><span>Aesthetic <b>Nest</b><small>LIVE BEAUTIFULLY</small></span></a><p>Warm, thoughtful details.<br>Room to feel at home.</p><nav><a href="{{ url_for('main.shop') }}">The shop</a><a href="{{ url_for('main.curated_finds') }}">Curated finds</a>{% if config['STORE_EMAIL'] %}<a href="mailto:{{ config['STORE_EMAIL'] }}">Get in touch</a>{% endif %}</nav></div><div class="footer-bottom"><span>© {{ now().year }} Aesthetic Nest</span><span>Made for the way you live.</span></div></footer>
+</body></html>
