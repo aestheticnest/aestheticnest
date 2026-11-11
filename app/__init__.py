@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> target/main
 import os
 from pathlib import Path
 from datetime import datetime, timezone
@@ -15,10 +12,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
-<<<<<<< HEAD
 
-=======
->>>>>>> target/main
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
@@ -29,7 +23,6 @@ limiter = Limiter(key_func=get_remote_address, default_limits=[])
 def create_app(test_config=None):
     root = Path(__file__).resolve().parent.parent
     load_dotenv(root / ".env")
-<<<<<<< HEAD
 
     # Vercel filesystem is read-only except for /tmp.
     # Locally, use the project's normal instance directory.
@@ -49,17 +42,10 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-=======
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object("app.config.Config")
-    if test_config:
-        app.config.update(test_config)
->>>>>>> target/main
     if not app.config.get("SECRET_KEY"):
         if app.config.get("TESTING"):
             app.config["SECRET_KEY"] = "test-only-secret"
         else:
-<<<<<<< HEAD
             raise RuntimeError(
                 "Set SECRET_KEY in .env before starting Aesthetic Nest."
             )
@@ -69,33 +55,22 @@ def create_app(test_config=None):
     os.makedirs(app.instance_path, exist_ok=True)
 
     # Initialize extensions
-=======
-            raise RuntimeError("Set SECRET_KEY in .env before starting Aesthetic Nest.")
-    os.makedirs(app.instance_path, exist_ok=True)
->>>>>>> target/main
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
     login_manager.init_app(app)
-<<<<<<< HEAD
 
     login_manager.login_view = "main.home"
 
     limiter.init_app(app)
 
     # Import models and blueprints
-=======
-    login_manager.login_view = "main.home"
-    limiter.init_app(app)
-
->>>>>>> target/main
     from app import models  # noqa: F401
     from app.routes.admin import admin_bp
     from app.routes.affiliate import affiliate_bp
     from app.routes.checkout import checkout_bp
     from app.routes.main import main_bp
 
-<<<<<<< HEAD
     # Register blueprints
     app.register_blueprint(main_bp)
     app.register_blueprint(checkout_bp)
@@ -104,12 +79,6 @@ def create_app(test_config=None):
         admin_bp,
         url_prefix=f"/{app.config['ADMIN_SECRET_ROUTE']}"
     )
-=======
-    app.register_blueprint(main_bp)
-    app.register_blueprint(checkout_bp)
-    app.register_blueprint(affiliate_bp)
-    app.register_blueprint(admin_bp, url_prefix=f"/{app.config['ADMIN_SECRET_ROUTE']}")
->>>>>>> target/main
 
     @app.context_processor
     def inject_store_settings():
@@ -126,7 +95,6 @@ def create_app(test_config=None):
 
     @app.after_request
     def set_security_headers(response):
-<<<<<<< HEAD
         response.headers.setdefault(
             "X-Content-Type-Options", "nosniff"
         )
@@ -156,20 +124,6 @@ def create_app(test_config=None):
                 "max-age=31536000; includeSubDomains"
             )
 
-=======
-        response.headers.setdefault("X-Content-Type-Options", "nosniff")
-        response.headers.setdefault("X-Frame-Options", "DENY")
-        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
-        response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
-        response.headers.setdefault(
-            "Content-Security-Policy",
-            "default-src 'self'; img-src 'self' https: data:; style-src 'self'; "
-            "script-src 'self'; font-src 'self' data:; connect-src 'self'; "
-            "form-action 'self'; frame-ancestors 'none'; base-uri 'self'",
-        )
-        if request.is_secure or app.config.get("SESSION_COOKIE_SECURE"):
-            response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
->>>>>>> target/main
         return response
 
     return app
@@ -179,7 +133,4 @@ def create_app(test_config=None):
 def load_user(user_id):
     from app.models import User
     return db.session.get(User, int(user_id))
-<<<<<<< HEAD
 
-=======
->>>>>>> target/main
